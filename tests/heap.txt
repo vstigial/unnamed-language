@@ -1,0 +1,17 @@
+GetProcessHeap
+push 4
+push 8
+swap rot
+HeapAlloc
+dup
+
+push 1
+push 69
+swap rot
+HeapSet
+
+push 1
+swap
+HeapGet
+
+exit

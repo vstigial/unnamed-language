@@ -1,0 +1,11 @@
+include "std/core64.txt"
+
+push "afg"
+push "afg"
+if streq then
+    push "equal\n" puts
+else
+    push "not equal\n" puts
+end
+
+push 0 exit

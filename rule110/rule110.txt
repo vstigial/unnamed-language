@@ -1,0 +1,83 @@
+include "std/win.txt"
+
+macro board_size push 100 endmacro
+macro sub_incr sub sizeof(int) mul endmacro
+
+# void *board
+board_size sizeof(int) mul
+Hmalloc
+
+# initialize *board to zeros
+push 0
+while dup board_size sizeof(int) mul < do
+    swap over
+    push 0
+    Hmemset swap
+    sizeof(int) add
+end drop
+
+board_size push 2 sub sizeof(int) mul
+push 1
+Hmemset
+
+push 0
+while dup board_size push 3 sub_incr < do
+    # [*board, 0(1)]
+    push 0
+    while dup board_size push 2 sub_incr < do
+        # [*board, 0(1), 0(2)]
+
+        rot over Hmemget 
+        push 32 shr # move to the lower 32 bits of rax, allowing the value to be correctly evaluated
+        if push 1 == then
+            push "*" puts
+        else
+            push " " puts
+        end swap rot swap
+
+        sizeof(int) add
+    end drop
+    push "\n" puts
+
+    # [*board , 0(1)] 
+    swap
+    push 0 # board[0]
+    Hmemget
+    push 1
+    shl
+    
+    swap
+    push 1 sizeof(int) mul # board[1]
+    Hmemget
+    rot or # pattern
+
+    # [0(1), *board, pattern]
+    sizeof(int)
+    while dup board_size push 2 sub_incr < do 
+        # [0(1), *board, pattern, 0(2)]
+        swap
+        push 1
+        shl
+        push 7
+        and over
+
+        push 1 sizeof(int) mul
+        add 2swap swap rot
+        Hmemget 2swap swap rot or dup
+
+        push 110
+        swap shr
+        push 1
+        and
+
+        2swap dup 2swap swap rot swap
+        Hmemset swap rot swap
+
+        sizeof(int) add
+    end drop drop swap # drop pattern and incr
+    
+    sizeof(int) add
+end drop
+
+push 0
+exit

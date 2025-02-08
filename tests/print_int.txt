@@ -1,0 +1,8 @@
+push 1
+push 3
+add print 
+push 5 add print
+drop # drop remaining int on stack (9)
+
+push 0
+exit

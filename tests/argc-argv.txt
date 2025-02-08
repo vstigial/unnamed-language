@@ -1,0 +1,15 @@
+include "std/win.txt"
+
+push "argc: " puts
+argc print
+
+push 0
+while dup argc push 1 sub < do
+    # sub 1 for zero indexing
+    dup
+    nth_argv load64 dup wcstrlen wputs
+    push "\n" puts
+    push 1 add
+end
+
+push 0 exit

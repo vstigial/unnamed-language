@@ -1,0 +1,15 @@
+macro while_loop
+    push 1
+    while dup push 10 < do
+        print
+        push 1 add
+    end
+    drop
+endmacro
+
+while_loop
+push "------------------------------\n" puts
+while_loop
+
+push 0
+exit

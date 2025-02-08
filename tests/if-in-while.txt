@@ -1,0 +1,11 @@
+push 1
+while dup push 10 < do
+  print
+  push 1 add
+  if dup then
+    push "str\n" puts
+  end
+end drop
+
+push 0
+exit

@@ -1,0 +1,119 @@
+include "./std/core64.txt"
+
+# for test case
+macro addexit
+    add
+    exit
+endmacro
+
+# Function signatures
+#  Function signatures show the stack before and after a macro
+#   - [older_on_stack, ..., newest_on_stack] -> [older_on_stack, ..., newest_on_stack]
+#   takes
+#    - older_on_stack
+#    - ...
+#    - newest_on_stack
+#   returns
+#    - older_on_stack
+#    - ...
+#    - newest_on_stack
+
+# WINDOWS-SPECIFIC
+macro sizeof(wchar_t) sizeof(u16) endmacro
+
+macro wcstrlen
+    # [ptr] -> [int]
+    # Returns the length of the null-terminated wchar_t array pointed to by ptr
+
+    # takes
+    #  - pointer to the array
+    # returns
+    #  - size of the array, determined by the null-terminator
+
+    dup
+    while
+        dup load16 push 0 !=
+    do
+        sizeof(wchar_t) add
+    end
+    swap sub
+    push 1 shr # divide by 2 for wchar bit width
+endmacro
+
+macro Hmalloc
+    # [size] -> [ptr]
+    # Allocates a block of 'size' bytes of memory. The allocated memory is not initialized
+
+    # takes
+    #  - size in bytes of allocation
+    # returns
+    #  - pointer to allocated memory block
+
+    push 0
+    GetProcessHeap
+    HeapAlloc
+endmacro
+
+macro Hmemset
+    # [ptr, index, value] -> [ptr]
+    # Sets the value at index in the block of memory pointed by ptr to the specified value
+    #  - HeapSet but with arguments in reverse order & ptr returned
+
+    # takes
+    #  - pointer to memory block
+    #  - index
+    #  - value
+    # returns
+    #  - pointer to memory block
+
+    swap rot
+    dup rot 2swap rot swap
+    HeapSet
+endmacro
+
+macro Hmemget
+    # [ptr, index] -> [ptr, value]
+    # Retrieves the value at the specified index from the memory block pointed to by ptr
+    #  - HeapGet but with arguments in reverse order & ptr returned
+
+    # takes
+    #  - pointer to memory block
+    #  - index
+    # returns
+    #  - pointer to memory block
+    #  - value
+
+    swap
+    dup rot 
+    HeapGet
+endmacro
+
+macro Hfree
+    # [ptr] -> [int]
+    # Frees a memory block allocated from a heap
+
+    # takes
+    #  - pointer to the memory block to be freed
+    # returns
+    #  - nonzero on success, zero on failure
+
+    push 0
+    GetProcessHeap
+    HeapFree
+endmacro
+
+macro Hrealloc
+    # [ptr, size] -> [ptr]
+    # Reallocates a block of memory from a heap
+
+    # takes
+    #  - pointer to the block of memory that is to be reallocated
+    #  - the new size of the memory block, in bytes
+    # returns
+    #  - pointer to the reallocated memory block
+
+    swap
+    push 0
+    GetProcessHeap
+    HeapReAlloc
+endmacro

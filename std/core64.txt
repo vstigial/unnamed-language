@@ -1,0 +1,113 @@
+macro sizeof(u64) push 8 endmacro
+macro sizeof(u32) push 4 endmacro
+macro sizeof(u16) push 2 endmacro
+macro sizeof(u8)  push 1 endmacro
+
+macro sizeof(ptr)  sizeof(u64) endmacro
+macro sizeof(bool) sizeof(u32) endmacro
+macro sizeof(int)  sizeof(u32) endmacro
+macro sizeof(char) sizeof(u8) endmacro
+
+macro 2dup
+    over over
+endmacro
+
+macro cstrlen
+    # [ptr] -> [int]
+    # Returns the length of the C string pointed to by ptr
+
+    # takes
+    #  - pointer to the C string
+    # returns
+    #  - size of the C string
+
+    dup
+    while
+        dup load8 push 0 !=
+    do
+        sizeof(char) add
+    end
+    swap sub
+endmacro
+
+macro nth_argv
+    # [int] -> [ptr]
+    # Returns the pointer to argv[int]
+
+    # takes
+    #  - desired index
+    # returns
+    #  - pointer to argv[desired index]
+
+    sizeof(ptr) mul
+    argv load64 add
+endmacro
+
+macro streq
+    # [str, len, str2, len2] -> [bool]
+    # Decides whether two strings are equal, then pushes the boolean value back
+
+    # takes
+    #  - ptr to the first string
+    #  - length of the first string
+    #  - ptr to the second string
+    #  - length of the second string
+    # returns
+    #  - 1 (true) or 0 (false) based on whether the strings are equal
+
+
+    # [str, len, str2, len2]
+    # [str, str2, len2, len]
+    rot
+    if 2dup != then
+        drop drop drop drop push 0
+    else
+        drop push 0
+        # [str, str2, op:bool, len2, 0]
+        while 2dup swap < do
+             # [len2, 0, str2, str, val, val]
+            2swap
+            dup load8
+            rot dup load8
+            rot
+            
+            if != then
+             # [len2, 0, str2, str]
+             # [str, str2, bool, len2, 0+len2]
+                swap 2swap over
+                add
+                push 0
+                swap rot swap
+
+            else               
+               sizeof(char) add swap
+               sizeof(char) add
+
+                # [str, str2, len2, 0]
+                2swap push 1 add
+            end
+        end drop drop
+        if push 0 == then
+            drop
+            push 0 # false
+        else
+            drop
+            push 1 # true
+        end
+    end
+endmacro
+
+macro cstreq
+    dup cstrlen
+    rot
+    dup cstrlen
+    streq
+endmacro
+
+#macro Hmemset
+#    rot dup
+#    rot add
+#    swap
+#
+#    store64
+#endmacro

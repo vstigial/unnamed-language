@@ -1,0 +1,37 @@
+include "std/win.txt"
+
+push 100
+push 4 # size of int
+mul
+Hmalloc
+
+push 0
+while dup push 100 < do
+    swap over dup
+    push 4 # size of int
+    mul
+    swap
+    Hmemset
+    
+    swap
+    push 1 add # incr by 1
+end drop
+
+push 0
+while dup push 100 < do
+    swap over
+   
+    push 4 # size of int
+    mul
+    Hmemget
+    print
+    drop
+
+    swap
+    push 1 add 
+end drop
+
+Hfree # Hmalloc return value is still on the stack
+
+push 0
+exit

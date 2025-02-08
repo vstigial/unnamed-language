@@ -1,0 +1,15 @@
+include "std/win.txt"
+
+push 4      # [4]
+Hmalloc     # [heap]
+
+push 1      # [heap, 1]
+push 69     # [heap, 1, 69]
+Hmemset     # [heap]
+
+push 1      # [heap, 1]
+Hmemget     # [heap, 69]
+
+swap drop   # [69]
+
+exit

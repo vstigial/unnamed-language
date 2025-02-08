@@ -1,0 +1,4 @@
+push "Hello, World!\n" puts
+
+push 0
+exit

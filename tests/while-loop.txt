@@ -1,0 +1,8 @@
+push 1
+while dup push 10 < do
+  print
+  push 1 add
+end drop
+
+push 0
+exit
