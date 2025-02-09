@@ -30,8 +30,11 @@ void escape_string(char *str) {
 }
 
 void add_string(StringTable *table, const char *str) {
+  char *str_copy = strdup(str);
+  escape_string(str_copy);
+
   for (size_t i = 0; i < table->count; i++) {
-    if (strcmp(table->strings[i], str) == 0) {
+    if (strcmp(table->strings[i], str_copy) == 0) {
       return; // String already added
     }
   }
@@ -41,8 +44,6 @@ void add_string(StringTable *table, const char *str) {
     table->strings = realloc(table->strings, table->capacity * sizeof(char *));
   }
 
-  char *str_copy = strdup(str);
-  escape_string(str_copy);
   table->strings[table->count++] = str_copy;
 }
 
