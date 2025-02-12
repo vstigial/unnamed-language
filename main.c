@@ -178,19 +178,24 @@ void parse(char **tokens, size_t count, FILE *out) {
     } else if (strcmp(tokens[i], "call0") == 0) {
       fprintf(out, " xor rax, rax\n call %s\n push rax\n", tokens[++i]);
     } else if (strcmp(tokens[i], "call1") == 0) {
-      fprintf(out, " xor rax, rax\n pop rcx\n call %s\n push rax\n",
+      fprintf(out,
+              " xor rax, rax\n pop rcx\n sub rsp, 32\n call %s\n add rsp, 32\n "
+              "push rax\n",
               tokens[++i]);
     } else if (strcmp(tokens[i], "call2") == 0) {
-      fprintf(out, " xor rax, rax\n pop rcx\n pop rdx\n call %s\n push rax\n",
+      fprintf(out,
+              " xor rax, rax\n pop rcx\n pop rdx\n sub rsp, 32\n call %s\n add "
+              "rsp, 32\n push rax\n",
               tokens[++i]);
     } else if (strcmp(tokens[i], "call3") == 0) {
-      fprintf(
-          out,
-          " xor rax, rax\n pop rcx\n pop rdx\n pop r8\n call %s\n push rax\n",
-          tokens[++i]);
+      fprintf(out,
+              " xor rax, rax\n pop rcx\n pop rdx\n pop r8\n sub rsp, 32\n call "
+              "%s\n add rsp, 32\n push rax\n",
+              tokens[++i]);
     } else if (strcmp(tokens[i], "call4") == 0) {
       fprintf(out,
-              " xor rax, rax\n pop rcx\n pop rdx\n pop r8\n pop r9\n call %s\n "
+              " xor rax, rax\n pop rcx\n pop rdx\n pop r8\n pop r9\n sub rsp, "
+              "32\n call %s\n add rsp, 32\n "
               "push rax\n",
               tokens[++i]);
 
