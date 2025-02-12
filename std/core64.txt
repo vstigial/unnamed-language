@@ -12,6 +12,13 @@ macro 2dup
     over over
 endmacro
 
+macro call4+
+    # macro created for code readability
+    # alias for call4
+    # used for cases where over 4 arguments are pushed to the stack
+    call4
+endmacro
+
 macro cstrlen
     # [ptr] -> [int]
     # Returns the length of the C string pointed to by ptr
