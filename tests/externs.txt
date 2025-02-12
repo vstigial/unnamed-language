@@ -1,0 +1,36 @@
+extern GetCurrentProcessId
+call0 GetCurrentProcessId print drop
+
+extern GetSystemMetrics
+push 0 # SM_CXSCREEN
+call1 GetSystemMetrics print drop
+
+extern SetCursorPos
+push 500
+push 500
+call2 SetCursorPos print drop # return value is nonzero if successful
+
+extern MulDiv
+push 2
+push 3
+push 50 # (50 * 3) / 2 = 75
+call3 MulDiv print drop
+
+extern MessageBoxA
+push 0              # no flags
+push "title"   drop # drop length
+push "4 args!" drop # messagebox content
+push 0              # null
+call4 MessageBoxA print drop
+
+extern WriteConsoleA
+push 0 # lpReserved
+push 0 # lpNumberOfCharsWritten
+push "Hello, World!\n" # lpBuffer
+swap   # nNumberOfCharactersToWrite
+extern GetStdHandle
+push -11
+call1 GetStdHandle
+call4 WriteConsoleA drop
+
+push 0 exit
