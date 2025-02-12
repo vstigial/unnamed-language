@@ -83,6 +83,9 @@ typedef struct {
 Macro macros[1024];
 size_t macro_count = 0;
 
+char *externs[1024];
+size_t extern_count = 0;
+
 void add_macro(const char *name, char **content, size_t content_count) {
   // redefinitions are supported
   size_t index = macro_count;
@@ -159,6 +162,22 @@ void parse(char **tokens, size_t count, FILE *out) {
       char **inc_tokens = lex(buffer, &inc_count);
       free(buffer);
       parse(inc_tokens, inc_count, out);
+    } else if (strcmp(tokens[i], "extern") == 0) {
+      i++;
+      bool prev_add = false;
+      for (size_t j = 0; j < extern_count; j++) {
+        if (strcmp(externs[j], tokens[i]) == 0) {
+          // already added
+          prev_add = true;
+        }
+      }
+      if (!prev_add)
+        externs[extern_count++] = tokens[i];
+
+      /* External Calls */
+    } else if (strcmp(tokens[i], "call0") == 0) {
+      fprintf(out, " xor rax, rax\n call %s\n push rax\n", tokens[++i]);
+
     } else if (strcmp(tokens[i], "pop") == 0) {
       fprintf(out, " pop %s\n", tokens[++i]);
     } else if (strcmp(tokens[i], "push64") == 0) {
@@ -457,7 +476,11 @@ int main(int argc, char **argv) {
           "    extern GetStdHandle, WriteConsoleA, WriteConsoleW, wsprintfA, "
           "ExitProcess, "
           "HeapAlloc, HeapReAlloc, HeapFree, GetProcessHeap, GetCommandLineW, "
-          "CommandLineToArgvW\n");
+          "CommandLineToArgvW, ");
+  for (size_t i = 0; i < extern_count - 1; i++) {
+    fprintf(out, "%s, ", externs[i]);
+  }
+  fprintf(out, "%s\n", externs[extern_count - 1]);
   output_string_table(out, &string_table);
   fclose(out);
 
