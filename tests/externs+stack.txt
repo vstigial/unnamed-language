@@ -1,0 +1,12 @@
+extern CreateFileA
+
+push 0 # hTemplateFile
+push 128 # dwFlagsAndAttributes (FILE_ATTRIBUTE_NORMAL)
+push 1 # dwCreationDisposition (CREATE_NEW)
+push 0 # lpSecurityAttributes (NULL)
+push 0 # dwShareMode
+push 268435456 # dwDesiredAccess (GENERIC_ALL)
+push "multi-arg-file.txt" drop
+call4 CreateFileA drop
+
+push 0 exit
