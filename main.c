@@ -177,6 +177,22 @@ void parse(char **tokens, size_t count, FILE *out) {
       /* External Calls */
     } else if (strcmp(tokens[i], "call0") == 0) {
       fprintf(out, " xor rax, rax\n call %s\n push rax\n", tokens[++i]);
+    } else if (strcmp(tokens[i], "call1") == 0) {
+      fprintf(out, " xor rax, rax\n pop rcx\n call %s\n push rax\n",
+              tokens[++i]);
+    } else if (strcmp(tokens[i], "call2") == 0) {
+      fprintf(out, " xor rax, rax\n pop rcx\n pop rdx\n call %s\n push rax\n",
+              tokens[++i]);
+    } else if (strcmp(tokens[i], "call3") == 0) {
+      fprintf(
+          out,
+          " xor rax, rax\n pop rcx\n pop rdx\n pop r8\n call %s\n push rax\n",
+          tokens[++i]);
+    } else if (strcmp(tokens[i], "call4") == 0) {
+      fprintf(out,
+              " xor rax, rax\n pop rcx\n pop rdx\n pop r8\n pop r9\n call %s\n "
+              "push rax\n",
+              tokens[++i]);
 
     } else if (strcmp(tokens[i], "pop") == 0) {
       fprintf(out, " pop %s\n", tokens[++i]);
@@ -203,7 +219,7 @@ void parse(char **tokens, size_t count, FILE *out) {
     } else if (strcmp(tokens[i], "not") == 0) {
       fprintf(out, " pop rax\n not rax\n push rax\n");
     } else if (strcmp(tokens[i], "exit") == 0) {
-      fprintf(out, " pop rcx\n call ExitProcess\n");
+      fprintf(out, " pop rcx\n and rsp, -16\n call ExitProcess\n");
     } else if (strcmp(tokens[i], "print") == 0) {
       fprintf(out, " call print_integer\n");
       print_int_called = true;
