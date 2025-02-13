@@ -230,14 +230,6 @@ void parse(char **tokens, size_t count, FILE *out) {
       print_int_called = true;
     } else if (strcmp(tokens[i], "drop") == 0) {
       fprintf(out, " pop rax\n");
-    } else if (strcmp(tokens[i], "puts") == 0) {
-      fprintf(out, " mov rcx, 4294967285\n call GetStdHandle\n"
-                   " mov rcx, rax\n pop r8\n pop rdx\n xor r9, r9\n call "
-                   "WriteConsoleA\n");
-    } else if (strcmp(tokens[i], "wputs") == 0) {
-      fprintf(out, " mov rcx, 4294967285\n call GetStdHandle\n"
-                   " mov rcx, rax\n pop r8\n pop rdx\n xor r9, r9\n call "
-                   "WriteConsoleW\n");
     } else if (strcmp(tokens[i], "dup") == 0) {
       fprintf(out, " pop rax\n push rax\n push rax\n");
     } else if (strcmp(tokens[i], "over") == 0) {

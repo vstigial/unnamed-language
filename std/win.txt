@@ -21,6 +21,48 @@ endmacro
 # WINDOWS-SPECIFIC
 macro sizeof(wchar_t) sizeof(u16) endmacro
 
+macro puts
+    # [ptr, int] -> [void]
+    # Puts a string on stdout
+
+    # takes
+    #  - pointer to the start of the string
+    #  - length of the string
+    # returns
+    #  - nothing
+    
+    extern GetStdHandle
+    extern WriteConsoleA
+
+    swap push 0 push 0 2swap
+    push -11
+    call1 GetStdHandle
+
+    call4 WriteConsoleA
+    drop drop
+endmacro
+
+macro wputs
+    # [ptr, int] -> [void]
+    # Puts a wchar_t array (string) on stdout
+
+    # takes
+    #  - pointer to the start of the string
+    #  - length of the string
+    # returns
+    #  - nothing
+    
+    extern GetStdHandle
+    extern WriteConsoleW
+
+    swap push 0 push 0 2swap
+    push -11
+    call1 GetStdHandle
+
+    call4 WriteConsoleW
+    drop drop
+endmacro
+
 macro wcstrlen
     # [ptr] -> [int]
     # Returns the length of the null-terminated wchar_t array pointed to by ptr
