@@ -489,11 +489,20 @@ int main(int argc, char **argv) {
           "    extern GetStdHandle, WriteConsoleA, WriteConsoleW, wsprintfA, "
           "ExitProcess, "
           "HeapAlloc, HeapReAlloc, HeapFree, GetProcessHeap, GetCommandLineW, "
-          "CommandLineToArgvW, ");
-  for (size_t i = 0; i < extern_count - 1; i++) {
-    fprintf(out, "%s, ", externs[i]);
+          "CommandLineToArgvW");
+
+  if (extern_count > 0)
+    fprintf(out, ", ");
+  else
+    fprintf(out, "\n");
+
+  for (size_t i = 0; i < extern_count; i++) {
+    if (i != (extern_count - 1))
+      fprintf(out, "%s, ", externs[i]);
+    else
+      fprintf(out, "%s\n", externs[i]);
   }
-  fprintf(out, "%s\n", externs[extern_count - 1]);
+
   output_string_table(out, &string_table);
   fclose(out);
 
